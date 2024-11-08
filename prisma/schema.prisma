@@ -27,3 +27,31 @@ enum Role {
   USER
   TENANT
 }
+
+model Tenant {
+  id    Int     @id @default(autoincrement())
+  name  String
+  subdomain String  @unique
+}
+
+enum Plan {
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+model Subscription {
+  id          Int     @id @default(autoincrement())
+  plan        Plan
+  startDate   DateTime
+  endDate     DateTime
+}
+
+model restaurant_profile {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  address String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
