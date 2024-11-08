@@ -1,7 +1,9 @@
 import express, { Express, Application, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
-import routes from './routes/user-routes';
+import userRoutes from './routes/user-routes';
+import tenantRoutes from './routes/tenant-routes';
+import restaurantRoutes from './routes/restaurant-routes';
 import cors from 'cors';
 dotenv.config();
 
@@ -17,7 +19,9 @@ app.use(express.json());
 
 app.use(cors());
 
-app.use('/users', routes);
+app.use('/users', userRoutes);
+app.use('/tenants', tenantRoutes);
+app.use('/restaurants', restaurantRoutes);
 
 app.all("*", (req: Request, res: Response) => {
     res.status(404).json({ error: `Route ${req.originalUrl} not found` });
