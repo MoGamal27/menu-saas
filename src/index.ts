@@ -1,6 +1,7 @@
 import express, { Express, Application, Request, Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
+import { tenantMiddleware } from './middleware/tenant-middleware';
 import userRoutes from './routes/user-routes';
 import tenantRoutes from './routes/tenant-routes';
 import restaurantRoutes from './routes/restaurant-routes';
@@ -21,6 +22,8 @@ app.use(cors());
 
 app.use('/users', userRoutes);
 app.use('/tenants', tenantRoutes);
+
+app.use(tenantMiddleware);
 app.use('/restaurants', restaurantRoutes);
 
 app.all("*", (req: Request, res: Response) => {
