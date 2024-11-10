@@ -1,16 +1,20 @@
-import { PrismaClient, Prisma } from '@prisma/client';
 import { Request } from 'express';
+import { prismaClientManager } from '../../prisma/PrismaClientManager';
+import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
 export class RestaurantProfileService {
-  constructor(private tenantPrisma: any) {}
+  private prisma!: PrismaClient;
 
-  async createRestaurantProfile(
-    name: string,
-    description: string,
-    address: string,
-  ) {
-    const newRestaurantProfile = await this.tenantPrisma.restaurantProfile.create({
+  constructor() {}
+
+  async init(request: Request) {
+    this.prisma = await prismaClientManager.getClient(request);
+  }
+
+  async createRestaurantProfile(name: string, description: string, address: string) {
+    if (!this.prisma) throw new Error("Prisma client not initialized. Call 'init' first.");
+
+    const newRestaurantProfile = await this.prisma.restaurant_profile.create({
       data: {
         name,
         description,
@@ -18,9 +22,5 @@ export class RestaurantProfileService {
       }
     });
     return newRestaurantProfile;
-  }
-
-  getAllRestaurantProfiles() {
-    return this.tenantPrisma.restaurantProfile.findMany();
   }
 }
